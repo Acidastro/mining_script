@@ -7,49 +7,52 @@ Created on Wed Feb 16 23:16:42 2022
 """
 
 
-import re
 from typing import List
+
+
+def find_int(line):
+    """Нахождение цены в конце строки и удаление лишнего после нее"""
+
+    answer = ''
+    for i in range(len(line)):  # перебираем все символы с конца
+        if str(line[-1]).isdigit():  # как только нашли число
+            while line[-1].isdigit():  # создаем цикл записи числа
+                answer += line[-1]  # записываем
+                line = line[:-1]  # и удаляем
+            return ''.join(reversed(list(answer))), line  # возвращаем нужное число и строку отдельно
+        else:
+            line = line[:-1]  # если это не число, удаляем
+
+
+def adding_a_percentage(answer):
+    """Добавляем + 100 юаней и + 10% к нашему числу"""
+    answer = int(answer)
+    answer += 100
+    answer *= 1.1
+    return int(answer)
+
+
+def filter(line):
+    import re
+    """
+    Фильтруем строку, нужно убрать все упоминания о количестве
+    (pcs,pieces,tablets,slices).
+    """
+    pattern = re.compile('pcs|pieces|tablets|slices')  # указываем паттерн для поиска
+    if pattern.search(line):
+        for i in range(len(line)):  # перебираем все символы с конца
+            if str(line[-1]).isdigit():  # как только нашли число
+                while line[-1].isdigit():  # создаем цикл удаления числа
+                    line = line[:-1]  # и удаляем
+                return line  # возвращаем строку
+            else:
+                line = line[:-1]  # если это не число, удаляем
+
 
 text = open('input.txt', 'r', encoding='utf8')
 out = open('output2.txt', 'w', encoding='utf8')
-z = []
 for i in text.readlines():
-    answer = (int((int(i.split()[-1]) + 100) * 0.1) + int(i.split()[-1]) + 100)
-    if 'pieces' in i:  # есть ли pieces
-        x = re.findall('[0-9]+', i)[-2]  # найти второе число с конца
-        z = i.split()  # сделаем список из данной строки
-        z.pop(z.index(x))  # удалим второе число с конца узнав его индекс
-        z = i
-        i = i[0:i.find('pieces')]  # вернуть без pieces
-    elif 'Pieces' in i:
-        x = re.findall('[0-9]+', i)[-2]  # найти второе число с конца
-        z = i.split()  # сделаем список из данной строки
-        z.pop(z.index(x))  # удалим второе число с конца узнав его индекс
-        z = i
-        i = i[0:i.find('Pieces')]  # вернуть без pieces
-    elif 'pcs' in i:
-        x = re.findall('[0-9]+', i)[-2]  # найти второе число с конца
-        z = i.split()  # сделаем список из данной строки
-        if 'pcs' in i.split():  # если pcs и число через пробел
-            z.pop(z.index(x))  # удалим второе число с конца узнав его индекс
-        else:  # если они написаны слитно
-            z.pop(z.index(x + 'pcs'))  # удалим второе число с конца узнав его индекс
-        z = i
-        i = i[0:i.find('pcs')]  # вернуть без pieces
-    elif 'tablets' in i:
-        x = re.findall('[0-9]+', i)[-2]  # найти второе число с конца
-        z = i.split()  # сделаем список из данной строки
-        z.pop(z.index(x))  # удалим второе число с конца узнав его индекс
-        z = i
-        i = i[0:i.find('tablets')]  # вернуть без pieces
-    elif 'slices' in i:
-        x = re.findall('[0-9]+', i)[-2]  # найти второе число с конца
-        z = i.split()  # сделаем список из данной строки
-        z.pop(z.index(x))  # удалим второе число с конца узнав его индекс
-        z = i
-        i = i[0:i.find('slices')]  # вернуть без pieces
-
-    # print(*i.split()[:-1], ',', answer, ',', int(answer/6.2), ',', int(answer*12.25), file=out)
-    print(*i.split()[:-1], ',', answer, file=out)
-    # print(*i.split()[:-1], ',', answer, ',', int(answer/6.2), ',', int(answer*12.25))
-    print(*i.split()[:-1], answer)
+    answer, i = find_int(i)  # возвращаем итоговую цену и укороченую строку
+    answer = adding_a_percentage(answer)  # добавляем процент
+    i = filter(i).strip()
+    print(i, answer)
