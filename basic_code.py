@@ -11,21 +11,24 @@ from typing import List
 
 
 def find_int(line):
-    """Нахождение цены в конце строки и удаление лишнего после нее"""
-
+    """
+    Finding the price at the end of the string and removing the excess after it
+    """
     answer = ''
-    for i in range(len(line)):  # перебираем все символы с конца
-        if str(line[-1]).isdigit():  # как только нашли число
-            while line[-1].isdigit():  # создаем цикл записи числа
-                answer += line[-1]  # записываем
-                line = line[:-1]  # и удаляем
-            return ''.join(reversed(list(answer))), line  # возвращаем нужное число и строку отдельно
+    for i in range(len(line)):  # iterate over all characters from the end
+        if str(line[-1]).isdigit():  # as soon as you find the number
+            while line[-1].isdigit():  # create a loop for writing a number
+                answer += line[-1]  # write down
+                line = line[:-1]  # and delete
+            return ''.join(reversed(list(answer))), line  # return the desired number and string separately
         else:
-            line = line[:-1]  # если это не число, удаляем
+            line = line[:-1]  # if it's not a number, delete
 
 
 def adding_a_percentage(answer):
-    """Добавляем + 100 юаней и + 10% к нашему числу"""
+    """
+    Adding +100 yuan and +10% to our number
+    """
     answer = int(answer)
     answer += 100
     answer *= 1.1
@@ -35,24 +38,24 @@ def adding_a_percentage(answer):
 def filter(line):
     import re
     """
-    Фильтруем строку, нужно убрать все упоминания о количестве
+    We filter the line, we need to remove all references to the quantity
     (pcs,pieces,tablets,slices).
     """
-    pattern = re.compile('pcs|pieces|tablets|slices')  # указываем паттерн для поиска
+    pattern = re.compile('pcs|pieces|tablets|slices')  # specify the search pattern
     if pattern.search(line.lower()):
-        for i in range(len(line)):  # перебираем все символы с конца
-            if str(line[-1]).isdigit():  # как только нашли число
-                while line[-1].isdigit():  # создаем цикл удаления числа
-                    line = line[:-1]  # и удаляем
-                return line  # возвращаем строку
+        for i in range(len(line)):  # iterate over all characters from the end
+            if str(line[-1]).isdigit():  # as soon as you find the number
+                while line[-1].isdigit():  # create a deletion loop
+                    line = line[:-1]  # and delete
+                return line
             else:
-                line = line[:-1]  # если это не число, удаляем
+                line = line[:-1]  # if it's not a number, delete
 
 
 text = open('input.txt', 'r', encoding='utf8')
 out = open('output2.txt', 'w', encoding='utf8')
 for i in text.readlines():
-    answer, i = find_int(i)  # возвращаем итоговую цену и укороченую строку
-    answer = adding_a_percentage(answer)  # добавляем процент
+    answer, i = find_int(i)  # return the total price and a shortened string
+    answer = adding_a_percentage(answer)  # add percentage
     i = filter(i).strip()
     print(i, answer)
