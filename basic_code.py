@@ -58,4 +58,6 @@ for i in text.readlines():
     answer, i = find_int(i)  # return the total price and a shortened string
     answer = adding_a_percentage(answer)  # add percentage
     i = filter(i).strip()
-    print(i, answer)
+    print(i, answer, file=out)
+out.close()
+text.close()
