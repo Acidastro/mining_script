@@ -39,7 +39,7 @@ def filter(line):
     (pcs,pieces,tablets,slices).
     """
     pattern = re.compile('pcs|pieces|tablets|slices')  # указываем паттерн для поиска
-    if pattern.search(line):
+    if pattern.search(line.lower()):
         for i in range(len(line)):  # перебираем все символы с конца
             if str(line[-1]).isdigit():  # как только нашли число
                 while line[-1].isdigit():  # создаем цикл удаления числа
